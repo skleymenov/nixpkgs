@@ -1760,6 +1760,16 @@
     githubId = 490965;
     name = "Craig Swank";
   };
+  cust0dian = {
+    email = "serg@effectful.software";
+    github = "cust0dian";
+    githubId = 389387;
+    name = "Serg Nesterov";
+    keys = [{
+      longkeyid = "rsa4096/0x1512F6EB84AECC8C";
+      fingerprint = "6E7D BA30 DB5D BA60 693C  3BE3 1512 F6EB 84AE CC8C";
+    }];
+  };
   cwoac = {
     email = "oliver@codersoffortune.net";
     github = "cwoac";
@@ -2169,6 +2179,16 @@
     github = "dpaetzel";
     githubId = 974130;
     name = "David Pätzel";
+  };
+  dpausp = {
+    email = "dpausp@posteo.de";
+    github = "dpausp";
+    githubId = 1965950;
+    name = "Tobias Stenzel";
+    keys = [{
+      longkeyid = "rsa2048/0x78C7DD40DF23FB16";
+      fingerprint = "4749 0887 CF3B 85A1 6355  C671 78C7 DD40 DF23 FB16";
+    }];
   };
   dpflug = {
     email = "david@pflug.email";
@@ -9256,5 +9276,11 @@
     email = "ext0l@riseup.net";
     github = "deifactor";
     githubId = 30192992;
+  };
+  fzakaria = {
+    name = "Farid Zakaria";
+    email = "farid.m.zakaria@gmail.com";
+    github = "fzakaria";
+    githubId = 605070;
   };
 }

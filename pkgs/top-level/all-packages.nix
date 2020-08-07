@@ -504,9 +504,7 @@ in
 
   findXMLCatalogs = makeSetupHook { } ../build-support/setup-hooks/find-xml-catalogs.sh;
 
-  wrapGAppsHook = makeSetupHook {
-    deps = lib.optional (!stdenv.isDarwin) dconf.lib ++ [ gtk3 librsvg makeWrapper ];
-  } ../build-support/setup-hooks/wrap-gapps-hook.sh;
+  wrapGAppsHook = callPackage ../build-support/setup-hooks/wrap-gapps-hook { };
 
   separateDebugInfo = makeSetupHook { } ../build-support/setup-hooks/separate-debug-info.sh;
 
@@ -957,6 +955,8 @@ in
 
   dpt-rp1-py = callPackage ../tools/misc/dpt-rp1-py { };
 
+  doona = callPackage ../tools/security/doona { };
+
   ecdsautils = callPackage ../tools/security/ecdsautils { };
 
   sedutil = callPackage ../tools/security/sedutil { };
@@ -1054,6 +1054,8 @@ in
   http2tcp = callPackage ../tools/networking/http2tcp { };
 
   httperf = callPackage ../tools/networking/httperf { };
+
+  hwi = with python3Packages; toPythonApplication hwi;
 
   ili2c = callPackage ../tools/misc/ili2c { };
 
@@ -1366,6 +1368,8 @@ in
   bowtie2 = callPackage ../applications/science/biology/bowtie2 { };
 
   boxfs = callPackage ../tools/filesystems/boxfs { };
+
+  bpytop = callPackage ../tools/system/bpytop { };
 
   brasero-original = lowPrio (callPackage ../tools/cd-dvd/brasero { });
 
@@ -1996,6 +2000,8 @@ in
 
   gthree = callPackage ../development/libraries/gthree { };
 
+  gtg = callPackage ../applications/office/gtg { };
+
   gti = callPackage ../tools/misc/gti { };
 
   hdate = callPackage ../applications/misc/hdate { };
@@ -2073,6 +2079,8 @@ in
   loccount = callPackage ../development/tools/misc/loccount { };
 
   long-shebang = callPackage ../misc/long-shebang {};
+
+  lowdown = callPackage ../tools/typesetting/lowdown { };
 
   numatop = callPackage ../os-specific/linux/numatop { };
 
@@ -5440,6 +5448,8 @@ in
 
   nat-traverse = callPackage ../tools/networking/nat-traverse { };
 
+  navi = callPackage ../applications/misc/navi { };
+
   navilu-font = callPackage ../data/fonts/navilu { stdenv = stdenvNoCC; };
 
   nawk = callPackage ../tools/text/nawk { };
@@ -5552,6 +5562,8 @@ in
 
   ndstool = callPackage ../tools/archivers/ndstool { };
 
+  nfs-ganesha = callPackage ../servers/nfs-ganesha { };
+
   ngrep = callPackage ../tools/networking/ngrep { };
 
   neuron-notes = haskell.lib.justStaticExecutables (haskell.lib.generateOptparseApplicativeCompletion "neuron" haskellPackages.neuron);
@@ -5659,6 +5671,8 @@ in
   ntfsprogs = pkgs.ntfs3g;
 
   ntfy = callPackage ../tools/misc/ntfy {};
+
+  ntirpc = callPackage ../development/libraries/ntirpc { };
 
   ntopng = callPackage ../tools/networking/ntopng { };
 
@@ -5803,9 +5817,6 @@ in
 
   openssh_hpn = pkgs.appendToName "with-hpn" (openssh.override {
     hpnSupport = true;
-    # the hpn patchset does not yet support openssl>1.0.2
-    # https://github.com/rapier1/openssh-portable/issues/14
-    openssl = openssl_1_0_2;
   });
 
   openssh_gssapi = pkgs.appendToName "with-gssapi" (openssh.override {
@@ -7388,6 +7399,8 @@ in
   untex = callPackage ../tools/text/untex { };
 
   untrunc = callPackage ../tools/video/untrunc { };
+
+  untrunc-anthwlock = callPackage ../tools/video/untrunc-anthwlock { };
 
   up = callPackage ../tools/misc/up { };
 
@@ -10614,6 +10627,8 @@ in
 
   elfutils = callPackage ../development/tools/misc/elfutils { };
 
+  eliot-tree = callPackage ../development/tools/eliot-tree { };
+
   emma = callPackage ../development/tools/analysis/emma { };
 
   epm = callPackage ../development/tools/misc/epm { };
@@ -12649,7 +12664,7 @@ in
       stdenv = gcc6Stdenv; # with gcc-7: undefined reference to `__divmoddi4'
     }));
 
-  icu = icu64;
+  icu = icu67;
 
   id3lib = callPackage ../development/libraries/id3lib { };
 
@@ -13889,9 +13904,7 @@ in
     python = python3;
   };
 
-  libxml2Python = let
-    libxml2 = python2Packages.libxml2;
-  in pkgs.buildEnv { # slightly hacky
+  libxml2Python = pkgs.buildEnv { # slightly hacky
     name = "libxml2+py-${res.libxml2.version}";
     paths = with libxml2; [ dev bin py ];
     inherit (libxml2) passthru;
@@ -14034,7 +14047,17 @@ in
   }
     # Temporary fix for .drivers that avoids causing lots of rebuilds; see #91145
      // { drivers = (mesa.overrideAttrs (a: {
-            nativeBuildInputs = [ patchelf_0_9 ] ++ a.nativeBuildInputs or [];
+            nativeBuildInputs = [
+              (patchelf.overrideAttrs (pa: {
+                src = fetchFromGitHub {
+                  owner = "NixOS";
+                  repo = "patchelf";
+                  rev = "61bc10176"; # current master; what matters is merge of #225
+                  sha256 = "0cy77mn77w3mn64ggp20f4ygnbxfjmddhjjhfwkva53lsirg6w93";
+                };
+                nativeBuildInputs = pa.nativeBuildInputs or [] ++ [ autoreconfHook ];
+              }))
+            ] ++ a.nativeBuildInputs or [];
           })).drivers;
         }
     ;
@@ -14452,7 +14475,7 @@ in
     python = python37;
   };
 
-  protobuf = protobuf3_8;
+  protobuf = protobuf3_12;
 
   protobuf3_12 = callPackage ../development/libraries/protobuf/3.12.nix { };
   protobuf3_11 = callPackage ../development/libraries/protobuf/3.11.nix { };
@@ -16076,6 +16099,12 @@ in
 
   jetty = callPackage ../servers/http/jetty { };
 
+  jicofo = callPackage ../servers/jicofo { };
+
+  jitsi-meet = callPackage ../servers/web-apps/jitsi-meet { };
+
+  jitsi-videobridge = callPackage ../servers/jitsi-videobridge { };
+
   kapow = callPackage ../servers/kapow { };
 
   keycloak = callPackage ../servers/keycloak { };
@@ -17263,14 +17292,6 @@ in
     ];
   };
 
-  linux_5_6 = callPackage ../os-specific/linux/kernel/linux-5.6.nix {
-    kernelPatches = [
-      kernelPatches.bridge_stp_helper
-      kernelPatches.request_key_helper
-      kernelPatches.export_kernel_fpu_functions."5.3"
-    ];
-  };
-
   linux_5_7 = callPackage ../os-specific/linux/kernel/linux-5.7.nix {
     kernelPatches = [
       kernelPatches.bridge_stp_helper
@@ -17508,7 +17529,6 @@ in
   linuxPackages_4_14 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_14);
   linuxPackages_4_19 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_19);
   linuxPackages_5_4 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_5_4);
-  linuxPackages_5_6 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_5_6);
   linuxPackages_5_7 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_5_7);
 
   # When adding to this list:
@@ -17547,7 +17567,7 @@ in
   # Hardened Linux
   hardenedLinuxPackagesFor = kernel': overrides:
     let # Note: We use this hack since the hardened patches can lag behind and we don't want to delay updates:
-      linux_latest_for_hardened = pkgs.linux_latest;
+      linux_latest_for_hardened = pkgs.linux_5_7;
       kernel = (if kernel' == pkgs.linux_latest then linux_latest_for_hardened else kernel').override overrides;
     in linuxPackagesFor (kernel.override {
       structuredExtraConfig = import ../os-specific/linux/kernel/hardened/config.nix {
@@ -18473,6 +18493,8 @@ in
   kochi-substitute = callPackage ../data/fonts/kochi-substitute {};
 
   kochi-substitute-naga10 = callPackage ../data/fonts/kochi-substitute-naga10 {};
+
+  kopia = callPackage ../tools/backup/kopia { };
 
   lato = callPackage ../data/fonts/lato {};
 
@@ -19878,6 +19900,10 @@ in
     inherit (darwin.apple_sdk.frameworks) Security;
   };
 
+  finalfusion-utils = callPackage ../applications/science/machine-learning/finalfusion-utils {
+    inherit (darwin.apple_sdk.frameworks) Security;
+  };
+
   flacon = libsForQt5.callPackage ../applications/audio/flacon { };
 
   flexget = callPackage ../applications/networking/flexget { };
@@ -20330,6 +20356,8 @@ in
   gnunet = callPackage ../applications/networking/p2p/gnunet { };
 
   gnunet_git = lowPrio (callPackage ../applications/networking/p2p/gnunet/git.nix { });
+
+  gnunet-gtk = callPackage ../applications/networking/p2p/gnunet/gtk.nix { };
 
   gocr = callPackage ../applications/graphics/gocr { };
 
@@ -21062,6 +21090,7 @@ in
   libreoffice-still = lowPrio (callPackage ../applications/office/libreoffice/wrapper.nix {
     libreoffice = callPackage ../applications/office/libreoffice
       (libreoffice-args // {
+        icu = icu64;
         variant = "still";
       });
   });
@@ -21081,12 +21110,7 @@ in
 
   linuxband = callPackage ../applications/audio/linuxband { };
 
-  ledger = callPackage ../applications/office/ledger {
-    # Boost >= 1.67 changed the name of boost python; ledger's cmake build needs
-    # an update to find it:
-    # https://www.boost.org/doc/libs/1_68_0/libs/python/doc/html/rn.html
-    boost = boost15x;
-  };
+  ledger = callPackage ../applications/office/ledger { };
 
   ledger-autosync = callPackage  ../applications/office/ledger-autosync { };
 
@@ -22378,6 +22402,8 @@ in
   udevil = callPackage ../applications/misc/udevil {};
 
   udiskie = callPackage ../applications/misc/udiskie { };
+
+  sacc = callPackage ../applications/networking/gopher/sacc { };
 
   sakura = callPackage ../applications/misc/sakura { };
 
@@ -23872,12 +23898,10 @@ in
   monero = callPackage ../applications/blockchains/monero {
     inherit (darwin.apple_sdk.frameworks) CoreData IOKit PCSC;
     boost = boost17x;
-    pythonProtobuf = python3Packages.protobuf.override { protobuf = protobuf3_10; };
   };
 
   monero-gui = libsForQt5.callPackage ../applications/blockchains/monero-gui {
     boost = boost17x;
-    protobuf = protobuf3_10;
   };
 
   masari = callPackage ../applications/blockchains/masari.nix { boost = boost165; };
@@ -24575,6 +24599,8 @@ in
 
   service-wrapper = callPackage ../os-specific/linux/service-wrapper { };
 
+  sfrotz = callPackage ../games/sfrotz { };
+
   sgtpuzzles = callPackage (callPackage ../games/sgt-puzzles) { };
 
   shattered-pixel-dungeon = callPackage ../games/shattered-pixel-dungeon { };
@@ -24949,7 +24975,7 @@ in
     inherit (python3Packages) python pygobject3 pyxdg wrapPython;
     inherit (darwin.apple_sdk.frameworks) CoreLocation ApplicationServices Foundation Cocoa;
     geoclue = geoclue2;
-  }) redshift redshift-wlr;
+  }) redshift redshift-wlr gammastep;
 
   redshift-plasma-applet = libsForQt5.callPackage ../applications/misc/redshift-plasma-applet { };
 
@@ -25655,6 +25681,8 @@ in
 
   caneda = libsForQt5.callPackage ../applications/science/electronics/caneda { };
 
+  csxcad = callPackage ../applications/science/electronics/csxcad { };
+
   fparser = callPackage ../applications/science/electronics/fparser { };
 
   geda = callPackage ../applications/science/electronics/geda {
@@ -25664,6 +25692,8 @@ in
   gerbv = callPackage ../applications/science/electronics/gerbv { };
 
   gtkwave = callPackage ../applications/science/electronics/gtkwave { };
+
+  hyp2mat = callPackage ../applications/science/electronics/hyp2mat { };
 
   fped = callPackage ../applications/science/electronics/fped { };
 
@@ -25919,7 +25949,7 @@ in
 
   android-file-transfer = libsForQt5.callPackage ../tools/filesystems/android-file-transfer { };
 
-  antimicro = libsForQt5.callPackage ../tools/misc/antimicro { };
+  antimicroX = libsForQt5.callPackage ../tools/misc/antimicroX { };
 
   atari800 = callPackage ../misc/emulators/atari800 { };
 

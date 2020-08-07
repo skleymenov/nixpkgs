@@ -93,7 +93,7 @@
     "bond" = ps: with ps; [ ]; # missing inputs: bond-home
     "braviatv" = ps: with ps; [ bravia-tv];
     "broadlink" = ps: with ps; [ broadlink];
-    "brother" = ps: with ps; [ ]; # missing inputs: brother
+    "brother" = ps: with ps; [ brother];
     "brottsplatskartan" = ps: with ps; [ ]; # missing inputs: brottsplatskartan
     "browser" = ps: with ps; [ ];
     "brunt" = ps: with ps; [ ]; # missing inputs: brunt
@@ -824,7 +824,7 @@
     "torque" = ps: with ps; [ aiohttp-cors];
     "totalconnect" = ps: with ps; [ ]; # missing inputs: total_connect_client
     "touchline" = ps: with ps; [ ]; # missing inputs: pytouchline
-    "tplink" = ps: with ps; [ ]; # missing inputs: pyHS100
+    "tplink" = ps: with ps; [ pyhs100];
     "tplink_lte" = ps: with ps; [ ]; # missing inputs: tp-connected
     "traccar" = ps: with ps; [ aiohttp-cors stringcase]; # missing inputs: pytraccar
     "trackr" = ps: with ps; [ ]; # missing inputs: pytrackr

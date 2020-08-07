@@ -543,6 +543,8 @@ in {
 
   breezy = callPackage ../development/python-modules/breezy { };
 
+  brother = callPackage ../development/python-modules/brother { };
+
   build = callPackage ../development/python-modules/build { };
 
   ciso8601 = callPackage ../development/python-modules/ciso8601 { };
@@ -728,6 +730,8 @@ in {
 
   diff-match-patch = callPackage ../development/python-modules/diff-match-patch { };
 
+  eliot = callPackage ../development/python-modules/eliot {};
+
   entrance = callPackage ../development/python-modules/entrance { routerFeatures = false; };
 
   entrance-with-router-features = callPackage ../development/python-modules/entrance { routerFeatures = true; };
@@ -872,6 +876,8 @@ in {
 
   httptools = callPackage ../development/python-modules/httptools { };
 
+  hwi = callPackage ../development/python-modules/hwi { };
+
   i3ipc = callPackage ../development/python-modules/i3ipc { };
 
   ignite = callPackage ../development/python-modules/ignite { };
@@ -893,6 +899,8 @@ in {
   itanium_demangler = callPackage ../development/python-modules/itanium_demangler { };
 
   itemadapter = callPackage ../development/python-modules/itemadapter { };
+
+  itemloaders = callPackage ../development/python-modules/itemloaders { };
 
   iterm2 = callPackage ../development/python-modules/iterm2 { };
 
@@ -1418,6 +1426,10 @@ in {
 
   pytest-tornado = callPackage ../development/python-modules/pytest-tornado { };
 
+  pytest-tornasync = callPackage ../development/python-modules/pytest-tornasync { };
+
+  pytest-trio = callPackage ../development/python-modules/pytest-trio { };
+
   pytest-twisted = callPackage ../development/python-modules/pytest-twisted { };
 
   pytest-xprocess = callPackage ../development/python-modules/pytest-xprocess { };
@@ -1550,6 +1562,10 @@ in {
 
   tokenizers = disabledIf (!isPy3k)
     (toPythonModule (callPackage ../development/python-modules/tokenizers { }));
+
+  towncrier = callPackage ../development/python-modules/towncrier {
+    inherit (pkgs) git;
+  };
 
   transformers = callPackage ../development/python-modules/transformers { };
 
@@ -2094,9 +2110,7 @@ in {
 
   cmarkgfm = callPackage ../development/python-modules/cmarkgfm { };
 
-  cirq = callPackage ../development/python-modules/cirq {
-    pythonProtobuf = self.protobuf;
-  };
+  cirq = callPackage ../development/python-modules/cirq { };
 
   citeproc-py = callPackage ../development/python-modules/citeproc-py { };
 
@@ -2233,6 +2247,8 @@ in {
 
   bsddb3 = callPackage ../development/python-modules/bsddb3 { };
 
+  bsdiff4 = callPackage ../development/python-modules/bsdiff4 { };
+
   bkcharts = callPackage ../development/python-modules/bkcharts { };
 
   bokeh = callPackage ../development/python-modules/bokeh { };
@@ -2351,6 +2367,8 @@ in {
   click = callPackage ../development/python-modules/click {};
 
   click-completion = callPackage ../development/python-modules/click-completion {};
+
+  click-datetime = callPackage ../development/python-modules/click-datetime { };
 
   click-default-group = callPackage ../development/python-modules/click-default-group { };
 
@@ -2575,6 +2593,8 @@ in {
   python-ly = callPackage ../development/python-modules/python-ly {};
 
   pyhcl = callPackage ../development/python-modules/pyhcl { };
+
+  pyhs100 = callPackage ../development/python-modules/pyhs100 { };
 
   pytest = if isPy3k then self.pytest_5 else self.pytest_4;
 
@@ -3598,6 +3618,8 @@ in {
   roman = callPackage ../development/python-modules/roman { };
 
   rotate-backups = callPackage ../tools/backup/rotate-backups { };
+
+  liblarch = callPackage ../development/python-modules/liblarch { };
 
   librosa = callPackage ../development/python-modules/librosa { };
 
@@ -5352,7 +5374,7 @@ in {
   protobuf = callPackage ../development/python-modules/protobuf {
     disabled = isPyPy;
     doCheck = !isPy3k;
-    protobuf = pkgs.protobuf3_8;
+    protobuf = pkgs.protobuf3_12;
   };
 
   psd-tools = callPackage ../development/python-modules/psd-tools { };
