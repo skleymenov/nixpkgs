@@ -1107,6 +1107,8 @@ in
 
   luigi = callPackage ../applications/networking/cluster/luigi { };
 
+  mactelnet = callPackage ../tools/admin/mactelnet { };
+
   m-cli = callPackage ../os-specific/darwin/m-cli { };
 
   pebble = callPackage ../tools/admin/pebble { };
